@@ -1,0 +1,231 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>data_division</title><meta name="generator" content="MATLAB 8.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-12-08"><meta name="DC.source" content="data_division.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">% 12/7</span>
+
+<span class="comment">% dividing traindata in 1000 validation and 5000 training and 600 testing</span>
+<span class="comment">%Speaker classification</span>
+
+data = train;
+[a b] = size(data);
+n1=1000; <span class="comment">% # to separate out validationset from data</span>
+n2 = 600; <span class="comment">% same for test</span>
+n=n1+n2;
+r = randsample(a,n);
+r1 = r(1:n1);
+r2 = r(n1+1:n);
+
+r1 = sort(r1);
+r2 = sort(r2);
+
+k=1;
+j=1;
+ val = [];
+ tr =[];
+ te =[];
+
+<span class="keyword">for</span> i = 1:a
+
+    <span class="keyword">if</span>  i ~= r1(k)
+
+        <span class="keyword">if</span> i ~= r2(j)
+                tr = [tr; data(i,:)];
+        <span class="keyword">else</span>
+            te = [te; data(i,:)];
+            j=j+1;
+            <span class="keyword">if</span> j==(n2+1)
+                j=1;
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+
+    <span class="keyword">else</span>
+        val = [val; data(i,:) ];
+        k=k+1;
+
+        <span class="keyword">if</span> k == (n1+1)
+            k=1;
+        <span class="keyword">end</span>
+
+
+    <span class="keyword">end</span>
+
+
+<span class="keyword">end</span>
+
+
+<span class="comment">% %KNN</span>
+
+
+t1= tr(:,1:26);
+t2 = tr(:,27);
+t3 =  val(:,1:26);
+<span class="comment">% t3 = ste(:,1:26);</span>
+[aa bb] = size(t3);
+
+error_sp = [];
+j=0;
+
+<span class="keyword">for</span>     n =  [1: 10 73:76 82:85]
+ test_ = Nearest_Neighbor ( t1' , t2' , t3' ,n);
+<span class="comment">% test_ = EM ( t1' , t2' , t3' ,n);</span>
+<span class="comment">%test_ = multisvm( t1' , t2' , t3');</span>
+
+<span class="keyword">for</span> i = 1:aa
+<span class="keyword">if</span> test_(i) ~= val(i,27)
+ j=j+1;
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+
+e  = j/aa*100;
+error_sp = [error_sp [n;e]];
+j=0;
+
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% 12/7
+
+% dividing traindata in 1000 validation and 5000 training and 600 testing
+%Speaker classification
+
+data = train;
+[a b] = size(data);
+n1=1000; % # to separate out validationset from data
+n2 = 600; % same for test
+n=n1+n2; 
+r = randsample(a,n); 
+r1 = r(1:n1);
+r2 = r(n1+1:n);
+
+r1 = sort(r1);
+r2 = sort(r2);
+
+k=1;
+j=1;
+ val = [];
+ tr =[];
+ te =[];
+ 
+for i = 1:a
+    
+    if  i ~= r1(k)
+        
+        if i ~= r2(j)
+                tr = [tr; data(i,:)];
+        else
+            te = [te; data(i,:)];
+            j=j+1;
+            if j==(n2+1)
+                j=1;
+            end
+        end
+        
+    else
+        val = [val; data(i,:) ];
+        k=k+1;
+        
+        if k == (n1+1)
+            k=1;
+        end
+        
+                
+    end
+    
+    
+end
+
+
+% %KNN
+
+
+t1= tr(:,1:26);
+t2 = tr(:,27);
+t3 =  val(:,1:26);
+% t3 = ste(:,1:26);
+[aa bb] = size(t3);
+
+error_sp = [];
+j=0;
+
+for     n =  [1: 10 73:76 82:85]
+ test_ = Nearest_Neighbor ( t1' , t2' , t3' ,n);
+% test_ = EM ( t1' , t2' , t3' ,n);
+%test_ = multisvm( t1' , t2' , t3');
+
+for i = 1:aa
+if test_(i) ~= val(i,27)
+ j=j+1;
+end
+end
+
+e  = j/aa*100;
+error_sp = [error_sp [n;e]];
+j=0;
+
+end
+##### SOURCE END #####
+--></body></html>
