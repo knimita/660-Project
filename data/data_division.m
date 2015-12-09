@@ -63,10 +63,10 @@ t3 = t(:,1:26);
 error_sp = [];
 j=0;
 g = ones(66,1);
- g= 1:66
-for     n =  r
-% test_ = Nearest_Neighbor ( t1' , t2' , t3' ,n);
-test_ = EM ( t1' , t2' , t3' ,n);
+ %g= 1:66;
+for     n =  [1 2 5 ]
+ test_ = Nearest_Neighbor ( t1' , t2' , t3' ,n);
+%test_ = EM ( t1' , t2' , t3' ,n);
 %test_ = multisvm( t1' , t2' , t3');
 
 for i = 1:aa
